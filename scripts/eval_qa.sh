@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Script to evaluate the predictions of a trained model on XQuAD, TyDi QA, and MLQA.
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 DIR=${REPO}/download
 XQUAD_DIR=${DIR}/xquad
 MLQA_DIR=${DIR}/mlqa
