@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 DIR=$REPO/download/
 mkdir -p $DIR
 
@@ -55,34 +55,38 @@ function download_pawsx {
 
 # download UD-POS dataset
 function download_udpos {
-    base_dir=$DIR/udpos-tmp
-    out_dir=$base_dir/conll/
-    mkdir -p $out_dir
-    cd $base_dir
-    curl -s --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3424/ud-treebanks-v2.7.tgz
-    tar -xzf $base_dir/ud-treebanks-v2.7.tgz
+      cd $DIR
+      gdown https://drive.google.com/uc?id=1tcwNq6mlNjUWsHlOBcM9R2prsTID6Dv_
+      cd REPO
 
-    langs=(af ar bg de el en es et eu fa fi fr he hi hu id it ja kk ko mr nl pt ru ta te th tl tr ur vi yo zh lt pl uk wo ro)
-    for x in $base_dir/ud-treebanks-v2.7/*/*.conllu; do
-        file="$(basename $x)"
-        IFS='_' read -r -a array <<< "$file"
-        lang=${array[0]}
-        if [[ " ${langs[@]} " =~ " ${lang} " ]]; then
-            lang_dir=$out_dir/$lang/
-            mkdir -p $lang_dir
-            y=$lang_dir/${file/conllu/conll}
-            if [ ! -f "$y" ]; then
-                echo "python $REPO/third_party/ud-conversion-tools/conllu_to_conll.py $x $y --lang $lang --replace_subtokens_with_fused_forms --print_fused_forms"
-                python $REPO/third_party/ud-conversion-tools/conllu_to_conll.py $x $y --lang $lang --replace_subtokens_with_fused_forms --print_fused_forms
-            else
-                echo "${y} exists"
-            fi
-        fi
-    done
+#     base_dir=$DIR/udpos-tmp
+#     out_dir=$base_dir/conll/
+#     mkdir -p $out_dir
+#     cd $base_dir
+#     curl -s --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3424/ud-treebanks-v2.7.tgz
+#     tar -xzf $base_dir/ud-treebanks-v2.7.tgz
 
-    python $REPO/utils_preprocess.py --data_dir $out_dir/ --output_dir $DIR/udpos/ --task  udpos
-    rm -rf $out_dir ud-treebanks-v2.tgz $DIR/udpos-tmp
-    echo "Successfully downloaded data at $DIR/udpos" >> $DIR/download.log
+#     langs=(af ar bg de el en es et eu fa fi fr he hi hu id it ja kk ko mr nl pt ru ta te th tl tr ur vi yo zh lt pl uk wo ro)
+#     for x in $base_dir/ud-treebanks-v2.7/*/*.conllu; do
+#         file="$(basename $x)"
+#         IFS='_' read -r -a array <<< "$file"
+#         lang=${array[0]}
+#         if [[ " ${langs[@]} " =~ " ${lang} " ]]; then
+#             lang_dir=$out_dir/$lang/
+#             mkdir -p $lang_dir
+#             y=$lang_dir/${file/conllu/conll}
+#             if [ ! -f "$y" ]; then
+#                 echo "python $REPO/third_party/ud-conversion-tools/conllu_to_conll.py $x $y --lang $lang --replace_subtokens_with_fused_forms --print_fused_forms"
+#                 python $REPO/third_party/ud-conversion-tools/conllu_to_conll.py $x $y --lang $lang --replace_subtokens_with_fused_forms --print_fused_forms
+#             else
+#                 echo "${y} exists"
+#             fi
+#         fi
+#     done
+
+#     python $REPO/utils_preprocess.py --data_dir $out_dir/ --output_dir $DIR/udpos/ --task  udpos
+#     rm -rf $out_dir ud-treebanks-v2.tgz $DIR/udpos-tmp
+#     echo "Successfully downloaded data at $DIR/udpos" >> $DIR/download.log
 }
 
 function download_panx {
