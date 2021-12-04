@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 DIR=$REPO/download
 mkdir -p $DIR
 
