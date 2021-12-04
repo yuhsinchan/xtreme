@@ -56,8 +56,9 @@ function download_pawsx {
 # download UD-POS dataset
 function download_udpos {
       cd $DIR
-      gdown https://drive.google.com/uc?id=1tcwNq6mlNjUWsHlOBcM9R2prsTID6Dv_
-      cd REPO
+      gdown https://drive.google.com/uc?id=1b18upJgbSP9NTqBSRe3PYwWND8cmqEGS
+      unzip udpos.zip -d $DIR
+      cd $REPO
 
 #     base_dir=$DIR/udpos-tmp
 #     out_dir=$base_dir/conll/
