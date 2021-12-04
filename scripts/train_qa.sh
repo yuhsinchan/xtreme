@@ -19,7 +19,7 @@ REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
 SRC=${2:-squad}
 TGT=${3:-xquad}
-GPU=${4:-0}
+# GPU=${4:-0}
 DATA_DIR=${5:-"$REPO/download/"}
 OUT_DIR=${6:-"$REPO/outputs/"}
 
