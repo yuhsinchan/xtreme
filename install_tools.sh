@@ -13,24 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eux  # for easier debugging
+# set -eux  # for easier debugging
 
-REPO=$PWD
-LIB=$REPO/third_party
-mkdir -p $LIB
+# REPO=$PWD
+# LIB=$REPO/third_party
+# mkdir -p $LIB
 
-# install conda env
-conda create --name xtreme --file conda-env.txt
-conda init bash
-conda activate xtreme
+# # install conda env
+# conda create --name xtreme --file conda-env.txt
+# conda init bash
+# conda activate xtreme
 
 # install latest transformer
-cd $LIB
 git clone https://github.com/huggingface/transformers
 cd transformers
-git checkout cefd51c50cc08be8146c1151544495968ce8f2ad
+git checkout -f cefd51c50cc08be8146c1151544495968ce8f2ad
 pip install .
-cd $LIB
 
 pip install seqeval
 pip install tensorboardx
@@ -40,8 +38,8 @@ pip install sacremoses
 pip install pythainlp
 pip install jieba
 
-git clone https://github.com/neubig/kytea.git && cd kytea
-autoreconf -i
-./configure --prefix=${CONDA_PREFIX}
-make && make install
-pip install kytea
+# git clone https://github.com/neubig/kytea.git && cd kytea
+# autoreconf -i
+# ./configure --prefix=${CONDA_PREFIX}
+# make && make install
+# pip install kytea
