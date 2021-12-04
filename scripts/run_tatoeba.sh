@@ -15,11 +15,11 @@
 
 REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
-GPU=${2:-0}
+# GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
 OUT_DIR=${4:-"$REPO/outputs/"}
 
-export CUDA_VISIBLE_DEVICES=$GPU
+# export CUDA_VISIBLE_DEVICES=$GPU
 
 TASK='tatoeba'
 TL='en'
