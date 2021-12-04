@@ -15,12 +15,12 @@
 
 REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
-GPU=${2:-0}
+# GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
 OUT_DIR=${4:-"$REPO/outputs/"}
 
 TASK='udpos'
-export CUDA_VISIBLE_DEVICES=$GPU
+# export CUDA_VISIBLE_DEVICES=$GPU
 LANGS='af,ar,bg,de,el,en,es,et,eu,fa,fi,fr,he,hi,hu,id,it,ja,kk,ko,mr,nl,pt,ru,ta,te,th,tl,tr,ur,vi,yo,zh,lt,pl,uk,ro'
 NUM_EPOCHS=10
 MAX_LENGTH=128
