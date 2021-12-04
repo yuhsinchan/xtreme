@@ -18,7 +18,7 @@
 
 REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
-GPU=${2:-0}
+# GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
 OUT_DIR=${4:-"$REPO/outputs/"}
 # Select a checkpoint based on validation performance.
@@ -48,7 +48,7 @@ MODEL_PATH=$MODEL_DIR/$CHECKPOINT
 OUTPUT_DIR=$MODEL_DIR/eval_$CHECKPOINT
 mkdir -p $OUTPUT_DIR
 
-export CUDA_VISIBLE_DEVICES=$GPU
+# export CUDA_VISIBLE_DEVICES=$GPU
 
 python $REPO/third_party/evaluate_retrieval.py \
   --model_type $MODEL_TYPE \
