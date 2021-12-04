@@ -23,6 +23,10 @@ import os
 from io import open
 from transformers import XLMTokenizer
 
+import copy
+
+from processors.reorder_with_ind import reorder_1_sent_with_labels
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,7 +59,7 @@ class InputFeatures(object):
     self.langs = langs
 
 
-def read_examples_from_file(file_path, lang, lang2id=None):
+def read_examples_from_file(file_path, lang, lang2id=None, aligned_suffix=None, augmentation=False):
   if not os.path.exists(file_path):
     logger.info("[Warming] file {} not exists".format(file_path))
     return []
@@ -67,6 +71,10 @@ def read_examples_from_file(file_path, lang, lang2id=None):
   else:
     lang_id = 0
   logger.info("lang_id={}, lang={}, lang2id={}".format(lang_id, lang, lang2id))
+  
+  if aligned_suffix:
+    alignmen_file = open('/'.join(file_path.split('/')[:-1]) + '/train.{}'.format(aligned_suffix)).readlines()
+  
   with open(file_path, encoding="utf-8") as f:
     words = []
     labels = []
@@ -96,11 +104,27 @@ def read_examples_from_file(file_path, lang, lang2id=None):
         else:
           # Examples could have no label for mode = "test"
           labels.append("O")
+      
     if words:
       examples.append(InputExample(guid="%s-%d".format(lang, guid_index),
                      words=words,
                      labels=labels,
                      langs=langs))
+      
+  if aligned_suffix:
+    all_words = [exm.words for exm in examples]
+    all_labels = [exm.labels for exm in examples]
+    reordered_words, reordered_labels = reorder_1_sent_with_labels(alignmen_file, all_words, all_labels)
+      
+    if augmentation:
+      examples_aug = copy.deepcopy(examples)
+      
+    for i in range(len(examples)):
+      examples[i].words = reordered_words[i]
+      examples[i].labels = reordered_labels[i]
+      
+    if augmentation:
+      examples += examples_aug
   return examples
 
 def convert_examples_to_features(examples,

@@ -344,7 +344,18 @@ def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode, l
     for lg in langs:
       data_file = os.path.join(args.data_dir, lg, "{}.{}".format(mode, args.model_name_or_path))
       logger.info("Creating features from dataset file at {} in language {}".format(data_file, lg))
-      examples = read_examples_from_file(data_file, lg, lang2id)
+      if mode == 'train':
+        examples = read_examples_from_file(data_file, lg, lang2id, args.aligned_suffix, args.augmentation)
+      else:
+        examples = read_examples_from_file(data_file, lg, lang2id)
+
+      if len(examples) == 0:
+        data_file = os.path.join(args.data_dir, "{}-{}.tsv".format(mode, lg))
+        logger.info("Creating features from dataset file at {} in language {}".format(data_file, lg))
+        examples = read_examples_from_file(data_file, lg, lang2id)
+        # if mode == 'test':
+        #   import pdb; pdb.set_trace()
+
       features_lg = convert_examples_to_features(examples, labels, args.max_seq_length, tokenizer,
                           cls_token_at_end=bool(args.model_type in ["xlnet"]),
                           cls_token=tokenizer.cls_token,
@@ -480,6 +491,11 @@ def main():
             help="The languages in the training sets.")
   parser.add_argument("--log_file", type=str, default=None, help="log file")
   parser.add_argument("--eval_patience", type=int, default=-1, help="wait N times of decreasing dev score before early stop during training")
+  
+  parser.add_argument("--aligned_suffix", type=str, default=None, help="alignment file suffix")
+  parser.add_argument("--augmentation", action="store_true", help="reordered data with original data as augmentation")
+  
+  
   args = parser.parse_args()
 
   if os.path.exists(args.output_dir) and os.listdir(
@@ -563,6 +579,7 @@ def main():
   # Training
   if args.do_train:
     train_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode="train", lang=args.train_langs, lang2id=lang2id, few_shot=args.few_shot)
+    
     global_step, tr_loss = train(args, train_dataset, model, tokenizer, labels, pad_token_label_id, lang2id)
     logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
 
@@ -631,8 +648,11 @@ def main():
     output_test_results_file = os.path.join(args.output_dir, "test_results.txt")
     with open(output_test_results_file, "a") as result_writer:
       for lang in args.predict_langs.split(','):
-        if not os.path.exists(os.path.join(args.data_dir, lang, 'test.{}'.format(args.model_name_or_path))):
+        check_1 = not os.path.exists(os.path.join(args.data_dir, lang, 'test.{}'.format(args.model_name_or_path)))
+        check_2 = not os.path.exists(os.path.join(args.data_dir, 'test-{}.tsv'.format(lang)))
+        if check_1 and check_2:
           logger.info("Language {} does not exist".format(lang))
+          # import pdb; pdb.set_trace()
           continue
         result, predictions = evaluate(args, model, tokenizer, labels, pad_token_label_id, mode="test", lang=lang, lang2id=lang2id)
 
@@ -645,6 +665,14 @@ def main():
         infile = os.path.join(args.data_dir, lang, "test.{}".format(args.model_name_or_path))
         idxfile = infile + '.idx'
         save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
+        # try:
+        #   infile = os.path.join(args.data_dir, lang, "test.{}".format(args.model_name_or_path))
+        #   idxfile = infile + '.idx'
+        #   save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
+        # except:
+        #   infile = os.path.join(args.data_dir, "test-{}.tsv".format(lang))
+        #   idxfile = infile + '.idx'
+        #   save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
 
   # Predict dev set
   if args.do_predict_dev and args.local_rank in [-1, 0]:
@@ -656,7 +684,9 @@ def main():
     output_test_results_file = os.path.join(args.output_dir, "dev_results.txt")
     with open(output_test_results_file, "w") as result_writer:
       for lang in args.predict_langs.split(','):
-        if not os.path.exists(os.path.join(args.data_dir, lang, 'dev.{}'.format(args.model_name_or_path))):
+        check_1 = not os.path.exists(os.path.join(args.data_dir, lang, 'dev.{}'.format(args.model_name_or_path)))
+        check_2 = not os.path.exists(os.path.join(args.data_dir, 'dev-{}.tsv'.format(lang)))
+        if check_1 and check_2:
           logger.info("Language {} does not exist".format(lang))
           continue
         result, predictions = evaluate(args, model, tokenizer, labels, pad_token_label_id, mode="dev", lang=lang, lang2id=lang2id)
@@ -667,9 +697,14 @@ def main():
           result_writer.write("{} = {}\n".format(key, str(result[key])))
         # Save predictions
         output_test_predictions_file = os.path.join(args.output_dir, "dev_{}_predictions.txt".format(lang))
-        infile = os.path.join(args.data_dir, lang, "dev.{}".format(args.model_name_or_path))
-        idxfile = infile + '.idx'
-        save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
+        try:
+          infile = os.path.join(args.data_dir, lang, "dev.{}".format(args.model_name_or_path))
+          idxfile = infile + '.idx'
+          save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
+        except:
+          infile = os.path.join(args.data_dir, "dev-{}.tsv".format(lang))
+          idxfile = infile + '.idx'
+          save_predictions(args, predictions, output_test_predictions_file, infile, idxfile)
 
 def save_predictions(args, predictions, output_file, text_file, idx_file, output_word_prediction=False):
   # Save predictions
@@ -690,7 +725,10 @@ def save_predictions(args, predictions, output_file, text_file, idx_file, output
         output_line = '\n' if cur_id != prev_id else ''
         if output_word_prediction:
           output_line += line.split()[0] + '\t'
-        output_line += predictions[example_id].pop(0) + '\n'
+        try:
+          output_line += predictions[example_id].pop(0) + '\n'
+        except:
+          output_line += 'X\n'
         writer.write(output_line)
         prev_id = cur_id
 
