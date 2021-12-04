@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Script to obtain predictions using a trained model on XQuAD, TyDi QA, and MLQA.
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
 MODEL_PATH=${2}
 TGT=${3:-xquad}
