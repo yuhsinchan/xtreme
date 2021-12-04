@@ -15,9 +15,9 @@
 
 # Fine-tune a pretrained multilingual encoder on the LAReQA retrieval task.
 
-REPO=$PWD
+# REPO=$PWD
 MODEL=${1:-bert-base-multilingual-cased}
-GPU=${2:-0}
+# GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
 OUT_DIR=${4:-"$REPO/outputs/"}
 
