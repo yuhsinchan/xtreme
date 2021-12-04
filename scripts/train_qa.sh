@@ -15,7 +15,7 @@
 
 # Script to train a model on SQuAD v1.1 or the English TyDiQA-GoldP train data.
 
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
 SRC=${2:-squad}
 TGT=${3:-xquad}
