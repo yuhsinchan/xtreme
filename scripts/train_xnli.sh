@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
 GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
