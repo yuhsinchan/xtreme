@@ -16,7 +16,7 @@
 # Evaluate a fine-tuned model (trained using scripts/train_lareqa.sh) on the
 # LAReQA retrieval task.
 
-REPO=$PWD
+REPO=/content/drive/MyDrive/cross-lingual/xtreme/
 MODEL=${1:-bert-base-multilingual-cased}
 GPU=${2:-0}
 DATA_DIR=${3:-"$REPO/download/"}
