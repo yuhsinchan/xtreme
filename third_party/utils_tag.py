@@ -73,7 +73,7 @@ def read_examples_from_file(file_path, lang, lang2id=None, aligned_suffix=None, 
   logger.info("lang_id={}, lang={}, lang2id={}".format(lang_id, lang, lang2id))
   
   if aligned_suffix:
-    alignmen_file = open('/'.join(file_path.split('/')[:-1]) + '/train.{}'.format(aligned_suffix)).readlines()
+    alignmen_file = open('/'.join(file_path.split('/')[:-2]) + '/train.{}'.format(aligned_suffix)).readlines()
   
   with open(file_path, encoding="utf-8") as f:
     words = []
