@@ -29,11 +29,9 @@ def _is_whitespace(c):
     return False
 
 
-def retrieval_squad_convert_example_to_features(example,
-                                                tokenizer,
-                                                max_seq_length,
-                                                max_query_length,
-                                                max_answer_length):
+def retrieval_squad_convert_example_to_features(
+    example, tokenizer, max_seq_length, max_query_length, max_answer_length
+):
     _ = max_seq_length  # TODO Currently we don't use max_seq_length, so make sure that it's being used correctly in tokenization.
     features = []
     # TODO make sure that this tokenization is happening correctly with correct cls, sep and max lengths.
@@ -50,7 +48,7 @@ def retrieval_squad_convert_example_to_features(example,
         # inputs to encode_plus().
         (example.sentence_text + example.paragraph_text).replace("\n", ""),
         max_length=max_answer_length,
-        pad_to_max_length=True
+        pad_to_max_length=True,
     )
 
     features.append(
@@ -75,9 +73,13 @@ def squad_convert_example_to_features_init(tokenizer_for_convert):
 
 
 def retrieval_squad_convert_examples_to_features(
-    examples, tokenizer, max_seq_length,
-    max_query_length, max_answer_length,
-    is_training, return_dataset,
+    examples,
+    tokenizer,
+    max_seq_length,
+    max_query_length,
+    max_answer_length,
+    is_training,
+    return_dataset,
     threads=1,
 ):
     """
@@ -114,19 +116,25 @@ def retrieval_squad_convert_examples_to_features(
             is_training=not evaluate,
         )
     """
-    if return_dataset != 'pt':
-        raise NotImplementedError("Retrival Squad can only convert examples to pytorch features.")
+    if return_dataset != "pt":
+        raise NotImplementedError(
+            "Retrival Squad can only convert examples to pytorch features."
+        )
 
     # Defining helper methods
     features = []
     threads = min(threads, cpu_count())
-    with Pool(threads, initializer=squad_convert_example_to_features_init, initargs=(tokenizer,)) as p:
+    with Pool(
+        threads,
+        initializer=squad_convert_example_to_features_init,
+        initargs=(tokenizer,),
+    ) as p:
         annotate_ = partial(
             retrieval_squad_convert_example_to_features,
             tokenizer=tokenizer,
             max_seq_length=max_seq_length,
             max_query_length=max_query_length,
-            max_answer_length=max_answer_length
+            max_answer_length=max_answer_length,
         )
         features = list(
             tqdm(
@@ -138,7 +146,9 @@ def retrieval_squad_convert_examples_to_features(
     new_features = []
     unique_id = 1000000000
     example_index = 0
-    for example_features in tqdm(features, total=len(features), desc="add example index and unique id"):
+    for example_features in tqdm(
+        features, total=len(features), desc="add example index and unique id"
+    ):
         if not example_features:
             continue
         for example_feature in example_features:
@@ -155,23 +165,31 @@ def retrieval_squad_convert_examples_to_features(
 
         # Convert to Tensors and build dataset
         q_input_ids = torch.tensor([f.q_input_ids for f in features], dtype=torch.long)
-        q_attention_masks = torch.tensor([f.q_attention_mask for f in features], dtype=torch.long)
-        q_token_type_ids = torch.tensor([f.q_token_type_ids for f in features], dtype=torch.long)
+        q_attention_masks = torch.tensor(
+            [f.q_attention_mask for f in features], dtype=torch.long
+        )
+        q_token_type_ids = torch.tensor(
+            [f.q_token_type_ids for f in features], dtype=torch.long
+        )
         a_input_ids = torch.tensor([f.a_input_ids for f in features], dtype=torch.long)
-        a_attention_masks = torch.tensor([f.a_attention_mask for f in features], dtype=torch.long)
-        a_token_type_ids = torch.tensor([f.a_token_type_ids for f in features], dtype=torch.long)
+        a_attention_masks = torch.tensor(
+            [f.a_attention_mask for f in features], dtype=torch.long
+        )
+        a_token_type_ids = torch.tensor(
+            [f.a_token_type_ids for f in features], dtype=torch.long
+        )
         # TODO more code here based on the model type (similar to logic in squad.py) because input features are different.
         if not is_training:
             all_example_index = torch.arange(q_input_ids.size(0), dtype=torch.long)
             dataset = TensorDataset(
-            q_input_ids,
-            q_attention_masks,
-            q_token_type_ids,
-            a_input_ids,
-            a_attention_masks,
-            a_token_type_ids,
-            all_example_index  # Add all_example_index as a feature
-        )
+                q_input_ids,
+                q_attention_masks,
+                q_token_type_ids,
+                a_input_ids,
+                a_attention_masks,
+                a_token_type_ids,
+                all_example_index,  # Add all_example_index as a feature
+            )
         else:
             dataset = TensorDataset(
                 q_input_ids,
@@ -196,7 +214,7 @@ class RetrievalSquadProcessor(DataProcessor):
     train_file = "train-v1.1.json"
     dev_file = "dev-v1.1.json"
 
-    def get_train_examples(self, data_dir, filename=None, language='en'):
+    def get_train_examples(self, data_dir, filename=None, language="en"):
         """
         Returns the training examples from the data directory.
 
@@ -210,15 +228,19 @@ class RetrievalSquadProcessor(DataProcessor):
             data_dir = ""
 
         if self.train_file is None:
-            raise ValueError("SquadProcessor should be instantiated via SquadV1Processor or SquadV2Processor")
+            raise ValueError(
+                "SquadProcessor should be instantiated via SquadV1Processor or SquadV2Processor"
+            )
 
         with open(
-            os.path.join(data_dir, self.train_file if filename is None else filename), "r", encoding="utf-8"
+            os.path.join(data_dir, self.train_file if filename is None else filename),
+            "r",
+            encoding="utf-8",
         ) as reader:
             input_data = json.load(reader)["data"]
         return self._create_examples(input_data, "train", language)
 
-    def get_dev_examples(self, data_dir, filename=None, language='en'):
+    def get_dev_examples(self, data_dir, filename=None, language="en"):
         """
         Returns the evaluation example from the data directory.
 
@@ -231,10 +253,14 @@ class RetrievalSquadProcessor(DataProcessor):
             data_dir = ""
 
         if self.dev_file is None:
-            raise ValueError("SquadProcessor should be instantiated via SquadV1Processor or SquadV2Processor")
+            raise ValueError(
+                "SquadProcessor should be instantiated via SquadV1Processor or SquadV2Processor"
+            )
 
         with open(
-            os.path.join(data_dir, self.dev_file if filename is None else filename), "r", encoding="utf-8"
+            os.path.join(data_dir, self.dev_file if filename is None else filename),
+            "r",
+            encoding="utf-8",
         ) as reader:
             input_data = json.load(reader)["data"]
         return self._create_examples(input_data, "dev", language)
@@ -246,7 +272,9 @@ class RetrievalSquadProcessor(DataProcessor):
         for entry in tqdm(input_data):
             for paragraph in entry["paragraphs"]:
                 paragraph_text = paragraph["context"]
-                sentence_breaks = list(infer_sentence_breaks(paragraph_text))  # TODO can also get sentence_breaks from json directly.
+                sentence_breaks = list(
+                    infer_sentence_breaks(paragraph_text)
+                )  # TODO can also get sentence_breaks from json directly.
                 paragraph_id += 1
                 doc_tokens = []
                 char_to_word_offset = []
@@ -289,14 +317,21 @@ class RetrievalSquadProcessor(DataProcessor):
                     # Note that this means for training mode, every example is NOT
                     # guaranteed to be preserved.
                     start_position = char_to_word_offset[answer_offset]
-                    end_position = char_to_word_offset[answer_offset + answer_length - 1]
+                    end_position = char_to_word_offset[
+                        answer_offset + answer_length - 1
+                    ]
                     actual_text = " ".join(
-                        doc_tokens[start_position:(end_position + 1)])
+                        doc_tokens[start_position : (end_position + 1)]
+                    )
                     cleaned_answer_text = " ".join(
-                        whitespace_tokenize(orig_answer_text))
+                        whitespace_tokenize(orig_answer_text)
+                    )
                     if actual_text.find(cleaned_answer_text) == -1:
-                        logger.warning("Could not find answer: '%s' vs. '%s'",
-                                        actual_text, cleaned_answer_text)
+                        logger.warning(
+                            "Could not find answer: '%s' vs. '%s'",
+                            actual_text,
+                            cleaned_answer_text,
+                        )
                         continue
 
                     example = RetrievalSquadExample(
@@ -305,7 +340,8 @@ class RetrievalSquadProcessor(DataProcessor):
                         answer_text=actual_text,
                         sentence_text=sentence_text,
                         paragraph_text=paragraph_text,
-                        paragraph_id=paragraph_id)
+                        paragraph_id=paragraph_id,
+                    )
                     examples.append(example)
         return examples
 
@@ -332,7 +368,7 @@ class RetrievalSquadExample(object):
         answer_text,
         sentence_text,
         paragraph_text,
-        paragraph_id
+        paragraph_id,
     ):
         self.qas_id = qas_id
         self.question_text = question_text
@@ -377,7 +413,7 @@ class RetrievalSquadFeatures(object):
         a_token_type_ids,
         qas_id,
         example_index,
-        unique_id
+        unique_id,
     ):
         self.q_input_ids = q_input_ids
         self.q_attention_mask = q_attention_mask

@@ -25,84 +25,124 @@ from .utils import InputExample
 
 logger = logging.getLogger(__name__)
 
+from processors.reorder_with_ind import reorder_2_sent
+
 
 class PawsxProcessor(DataProcessor):
-  """Processor for the PAWS-X dataset."""
+    """Processor for the PAWS-X dataset."""
 
-  def __init__(self):
-    pass
+    def __init__(self):
+        pass
 
-  def get_examples(self, data_dir, language='en', split='train'):
-    """See base class."""
-    examples = []
-    for lg in language.split(','):
-      lines = self._read_tsv(os.path.join(data_dir, "{}-{}.tsv".format(split, lg)))
-      
-      for (i, line) in enumerate(lines):
-        guid = "%s-%s-%s" % (split, lg, i)
-        text_a = line[0]
-        text_b = line[1]
-        if split == 'test' and len(line) != 3:
-          label = "0"
+    def get_examples(self, data_dir, language="en", split="train", alignment_file=None):
+        """See base class."""
+        examples = []
+        for lg in language.split(","):
+            lines = self._read_tsv(
+                os.path.join(data_dir, "{}-{}.tsv".format(split, lg))
+            )
+
+            for (i, line) in enumerate(lines):
+                guid = "%s-%s-%s" % (split, lg, i)
+                text_a = line[0]
+                text_b = line[1]
+                if split == "test" and len(line) != 3:
+                    label = "0"
+                else:
+                    label = str(line[2].strip())
+                assert (
+                    isinstance(text_a, str)
+                    and isinstance(text_b, str)
+                    and isinstance(label, str)
+                )
+                text_a, text_b = reorder_2_sent(
+                    alignment_file=alignment_file, text_a=text_a, text_b=text_b
+                )
+                examples.append(
+                    InputExample(
+                        guid=guid,
+                        text_a=text_a,
+                        text_b=text_b,
+                        label=label,
+                        language=lg,
+                    )
+                )
+        return examples
+
+    def get_translate_examples(self, data_dir, language="en", split="train"):
+        """See base class."""
+        languages = language.split(",")
+        examples = []
+        for language in languages:
+            if split == "train":
+                file_path = os.path.join(
+                    data_dir, "translated/en-{}-translated.tsv".format(language)
+                )
+            else:
+                file_path = os.path.join(
+                    data_dir, "translated/test-{}-en-translated.tsv".format(language)
+                )
+            logger.info("reading from " + file_path)
+            lines = self._read_tsv(file_path)
+            for (i, line) in enumerate(lines):
+                guid = "%s-%s-%s" % (split, language, i)
+                text_a = line[0]
+                text_b = line[1]
+                label = str(line[2].strip())
+                assert (
+                    isinstance(text_a, str)
+                    and isinstance(text_b, str)
+                    and isinstance(label, str)
+                )
+                examples.append(
+                    InputExample(
+                        guid=guid,
+                        text_a=text_a,
+                        text_b=text_b,
+                        label=label,
+                        language=language,
+                    )
+                )
+        return examples
+
+    def get_train_examples(self, data_dir, language="en", aligned_suffix=None):
+        """See base class."""
+        if aligned_suffix == None:
+            return self.get_examples(data_dir, language, split="train")
         else:
-          label = str(line[2].strip())
-        assert isinstance(text_a, str) and isinstance(text_b, str) and isinstance(label, str)
-        examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label, language=lg))
-    return examples
+            return self.get_examples(
+                data_dir, language, split="train", alignment_file=aligned_suffix
+            )
 
-  def get_translate_examples(self, data_dir, language='en', split='train'):
-    """See base class."""
-    languages = language.split(',')
-    examples = []
-    for language in languages:
-      if split == 'train':
-        file_path = os.path.join(data_dir, "translated/en-{}-translated.tsv".format(language))
-      else:
-        file_path = os.path.join(data_dir, "translated/test-{}-en-translated.tsv".format(language))
-      logger.info("reading from " + file_path)
-      lines = self._read_tsv(file_path)
-      for (i, line) in enumerate(lines):
-        guid = "%s-%s-%s" % (split, language, i)
-        text_a = line[0]
-        text_b = line[1]
-        label = str(line[2].strip())
-        assert isinstance(text_a, str) and isinstance(text_b, str) and isinstance(label, str)
-        examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label, language=language))
-    return examples
+    def get_translate_train_examples(self, data_dir, language="en"):
+        """See base class."""
+        return self.get_translate_examples(data_dir, language, split="train")
 
-  def get_train_examples(self, data_dir, language='en'):
-    """See base class."""
-    return self.get_examples(data_dir, language, split='train')
+    def get_translate_test_examples(self, data_dir, language="en"):
+        """See base class."""
+        return self.get_translate_examples(data_dir, language, split="test")
 
-  def get_translate_train_examples(self, data_dir, language='en'):
-    """See base class."""
-    return self.get_translate_examples(data_dir, language, split='train')
+    def get_test_examples(self, data_dir, language="en"):
+        """See base class."""
+        return self.get_examples(data_dir, language, split="test")
 
-  def get_translate_test_examples(self, data_dir, language='en'):
-    """See base class."""
-    return self.get_translate_examples(data_dir, language, split='test')
+    def get_dev_examples(self, data_dir, language="en"):
+        """See base class."""
+        return self.get_examples(data_dir, language, split="dev")
 
-  def get_test_examples(self, data_dir, language='en'):
-    """See base class."""
-    return self.get_examples(data_dir, language, split='test')
-
-  def get_dev_examples(self, data_dir, language='en'):
-    """See base class."""
-    return self.get_examples(data_dir, language, split='dev')
-
-  def get_labels(self):
-    """See base class."""
-    return ["0", "1"]
+    def get_labels(self):
+        """See base class."""
+        return ["0", "1"]
 
 
 pawsx_processors = {
-  "pawsx": PawsxProcessor,
+    "pawsx": PawsxProcessor,
 }
 
 pawsx_output_modes = {
-  "pawsx": "classification",
+    "pawsx": "classification",
 }
 
 pawsx_tasks_num_labels = {
-  "pawsx": 2,
+    "pawsx": 2,
 }

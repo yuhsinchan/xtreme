@@ -22,12 +22,12 @@ from transformers.configuration_roberta import RobertaConfig
 from transformers.file_utils import add_start_docstrings
 from bert import BertForRetrieval
 from roberta import (
-  RobertaForMaskedLM,
-  RobertaForMultipleChoice,
-  RobertaForSequenceClassification,
-  RobertaForTokenClassification,
-  RobertaForQuestionAnswering,
-  RobertaModel,
+    RobertaForMaskedLM,
+    RobertaForMultipleChoice,
+    RobertaForSequenceClassification,
+    RobertaForTokenClassification,
+    RobertaForQuestionAnswering,
+    RobertaModel,
 )
 
 
@@ -35,25 +35,26 @@ logger = logging.getLogger(__name__)
 
 
 XLM_ROBERTA_PRETRAINED_CONFIG_ARCHIVE_MAP = {
-  "xlm-roberta-base": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-base-config.json",
-  "xlm-roberta-large": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-config.json",
-  "xlm-roberta-large-finetuned-conll02-dutch": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-dutch-config.json",
-  "xlm-roberta-large-finetuned-conll02-spanish": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-spanish-config.json",
-  "xlm-roberta-large-finetuned-conll03-english": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-english-config.json",
-  "xlm-roberta-large-finetuned-conll03-german": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-german-config.json",
+    "xlm-roberta-base": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-base-config.json",
+    "xlm-roberta-large": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-config.json",
+    "xlm-roberta-large-finetuned-conll02-dutch": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-dutch-config.json",
+    "xlm-roberta-large-finetuned-conll02-spanish": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-spanish-config.json",
+    "xlm-roberta-large-finetuned-conll03-english": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-english-config.json",
+    "xlm-roberta-large-finetuned-conll03-german": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-german-config.json",
 }
 
 
 class XLMRobertaConfig(RobertaConfig):
-  pretrained_config_archive_map = XLM_ROBERTA_PRETRAINED_CONFIG_ARCHIVE_MAP
+    pretrained_config_archive_map = XLM_ROBERTA_PRETRAINED_CONFIG_ARCHIVE_MAP
+
 
 XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP = {
-  "xlm-roberta-base": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-base-pytorch_model.bin",
-  "xlm-roberta-large": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-pytorch_model.bin",
-  "xlm-roberta-large-finetuned-conll02-dutch": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-dutch-pytorch_model.bin",
-  "xlm-roberta-large-finetuned-conll02-spanish": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-spanish-pytorch_model.bin",
-  "xlm-roberta-large-finetuned-conll03-english": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-english-pytorch_model.bin",
-  "xlm-roberta-large-finetuned-conll03-german": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-german-pytorch_model.bin",
+    "xlm-roberta-base": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-base-pytorch_model.bin",
+    "xlm-roberta-large": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-pytorch_model.bin",
+    "xlm-roberta-large-finetuned-conll02-dutch": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-dutch-pytorch_model.bin",
+    "xlm-roberta-large-finetuned-conll02-spanish": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll02-spanish-pytorch_model.bin",
+    "xlm-roberta-large-finetuned-conll03-english": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-english-pytorch_model.bin",
+    "xlm-roberta-large-finetuned-conll03-german": "https://s3.amazonaws.com/models.huggingface.co/bert/xlm-roberta-large-finetuned-conll03-german-pytorch_model.bin",
 }
 
 
@@ -133,50 +134,50 @@ XLM_ROBERTA_INPUTS_DOCSTRING = r"""
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaModel(RobertaModel):
-  r"""
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **last_hidden_state**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
-          Sequence of hidden-states at the output of the last layer of the model.
-      **pooler_output**: ``torch.FloatTensor`` of shape ``(batch_size, hidden_size)``
-          Last layer hidden-state of the first token of the sequence (classification token)
-          further processed by a Linear layer and a Tanh activation function. The Linear
-          layer weights are trained from the next sentence prediction (classification)
-          eo match pre-training, XLM-RoBERTa input sequence should be formatted with <s> and </s> tokens as follows:
+    r"""
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **last_hidden_state**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
+            Sequence of hidden-states at the output of the last layer of the model.
+        **pooler_output**: ``torch.FloatTensor`` of shape ``(batch_size, hidden_size)``
+            Last layer hidden-state of the first token of the sequence (classification token)
+            further processed by a Linear layer and a Tanh activation function. The Linear
+            layer weights are trained from the next sentence prediction (classification)
+            eo match pre-training, XLM-RoBERTa input sequence should be formatted with <s> and </s> tokens as follows:
 
-          (a) For sequence pairs:
+            (a) For sequence pairs:
 
-              ``tokens:         <s> is this jack ##son ##ville ? </s> </s> no it is not . </s>``
+                ``tokens:         <s> is this jack ##son ##ville ? </s> </s> no it is not . </s>``
 
-              ``token_type_ids:   0   0  0    0    0     0       0   0   0     1  1  1  1   1   1``
+                ``token_type_ids:   0   0  0    0    0     0       0   0   0     1  1  1  1   1   1``
 
-          (b) For single sequences:
+            (b) For single sequences:
 
-              ``tokens:         <s> the dog is hairy . </s>``
+                ``tokens:         <s> the dog is hairy . </s>``
 
-              ``token_type_ids:   0   0   0   0  0     0   0``
+                ``token_type_ids:   0   0   0   0  0     0   0``
 
-          objective during Bert pretraining. This output is usually *not* a good summary
-          of the semantic content of the input, you're often better with averaging or pooling
-          the sequence of hidden-states for the whole input sequence.
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+            objective during Bert pretraining. This output is usually *not* a good summary
+            of the semantic content of the input, you're often better with averaging or pooling
+            the sequence of hidden-states for the whole input sequence.
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
 
-  Examples::
+    Examples::
 
-      tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
-      model = XLMRobertaModel.from_pretrained('xlm-roberta-large')
-      input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
-      outputs = model(input_ids)
-      last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
+        tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
+        model = XLMRobertaModel.from_pretrained('xlm-roberta-large')
+        input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids)
+        last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
 
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 
 @add_start_docstrings(
@@ -185,37 +186,37 @@ class XLMRobertaModel(RobertaModel):
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaForMaskedLM(RobertaForMaskedLM):
-  r"""
-      **masked_lm_labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
-          Labels for computing the masked language modeling loss.
-          Indices should be in ``[-1, 0, ..., config.vocab_size]`` (see ``input_ids`` docstring)
-          Tokens with indices set to ``-1`` are ignored (masked), the loss is only computed for the tokens with labels
-          in ``[0, ..., config.vocab_size]``
+    r"""
+        **masked_lm_labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
+            Labels for computing the masked language modeling loss.
+            Indices should be in ``[-1, 0, ..., config.vocab_size]`` (see ``input_ids`` docstring)
+            Tokens with indices set to ``-1`` are ignored (masked), the loss is only computed for the tokens with labels
+            in ``[0, ..., config.vocab_size]``
 
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **loss**: (`optional`, returned when ``masked_lm_labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-          Masked language modeling loss.
-      **prediction_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, config.vocab_size)``
-          Prediction scores of the language modeling head (scores for each vocabulary token before SoftMax).
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned when ``masked_lm_labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Masked language modeling loss.
+        **prediction_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, config.vocab_size)``
+            Prediction scores of the language modeling head (scores for each vocabulary token before SoftMax).
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
 
-  Examples::
+    Examples::
 
-      tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
-      model = XLMRobertaForMaskedLM.from_pretrained('xlm-roberta-large')
-      input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
-      outputs = model(input_ids, masked_lm_labels=input_ids)
-      loss, prediction_scores = outputs[:2]
+        tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
+        model = XLMRobertaForMaskedLM.from_pretrained('xlm-roberta-large')
+        input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, masked_lm_labels=input_ids)
+        loss, prediction_scores = outputs[:2]
 
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 
 @add_start_docstrings(
@@ -225,38 +226,38 @@ class XLMRobertaForMaskedLM(RobertaForMaskedLM):
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaForSequenceClassification(RobertaForSequenceClassification):
-  r"""
-      **labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
-          Labels for computing the sequence classification/regression loss.
-          Indices should be in ``[0, ..., config.num_labels]``.
-          If ``config.num_labels == 1`` a regression loss is computed (Mean-Square loss),
-          If ``config.num_labels > 1`` a classification loss is computed (Cross-Entropy).
+    r"""
+        **labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
+            Labels for computing the sequence classification/regression loss.
+            Indices should be in ``[0, ..., config.num_labels]``.
+            If ``config.num_labels == 1`` a regression loss is computed (Mean-Square loss),
+            If ``config.num_labels > 1`` a classification loss is computed (Cross-Entropy).
 
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-          Classification (or regression if config.num_labels==1) loss.
-      **logits**: ``torch.FloatTensor`` of shape ``(batch_size, config.num_labels)``
-          Classification (or regression if config.num_labels==1) scores (before SoftMax).
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Classification (or regression if config.num_labels==1) loss.
+        **logits**: ``torch.FloatTensor`` of shape ``(batch_size, config.num_labels)``
+            Classification (or regression if config.num_labels==1) scores (before SoftMax).
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
 
-  Examples::
+    Examples::
 
-      tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
-      model = XLMRobertaForSequenceClassification.from_pretrained('xlm-roberta-large')
-      input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
-      labels = torch.tensor([1]).unsqueeze(0)  # Batch size 1
-      outputs = model(input_ids, labels=labels)
-      loss, logits = outputs[:2]
+        tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
+        model = XLMRobertaForSequenceClassification.from_pretrained('xlm-roberta-large')
+        input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .")).unsqueeze(0)  # Batch size 1
+        labels = torch.tensor([1]).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, labels=labels)
+        loss, logits = outputs[:2]
 
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 
 @add_start_docstrings(
@@ -266,34 +267,34 @@ class XLMRobertaForSequenceClassification(RobertaForSequenceClassification):
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaForMultipleChoice(RobertaForMultipleChoice):
-  r"""
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-          Classification loss.
-      **classification_scores**: ``torch.FloatTensor`` of shape ``(batch_size, num_choices)`` where `num_choices` is the size of the second dimension
-          of the input tensors. (see `input_ids` above).
-          Classification scores (before SoftMax).
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+    r"""
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Classification loss.
+        **classification_scores**: ``torch.FloatTensor`` of shape ``(batch_size, num_choices)`` where `num_choices` is the size of the second dimension
+            of the input tensors. (see `input_ids` above).
+            Classification scores (before SoftMax).
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
 
-  Examples::
+    Examples::
 
-      tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
-      model = XLMRobertaForMultipleChoice.from_pretrained('xlm-roberta-large')
-      choices = ["Schloß Nymphenburg ist sehr schön .", "Der Schloßkanal auch !"]
-      input_ids = torch.tensor([tokenizer.encode(s, add_special_tokens=True) for s in choices]).unsqueeze(0)  # Batch size 1, 2 choices
-      labels = torch.tensor(1).unsqueeze(0)  # Batch size 1
-      outputs = model(input_ids, labels=labels)
-      loss, classification_scores = outputs[:2]
+        tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
+        model = XLMRobertaForMultipleChoice.from_pretrained('xlm-roberta-large')
+        choices = ["Schloß Nymphenburg ist sehr schön .", "Der Schloßkanal auch !"]
+        input_ids = torch.tensor([tokenizer.encode(s, add_special_tokens=True) for s in choices]).unsqueeze(0)  # Batch size 1, 2 choices
+        labels = torch.tensor(1).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, labels=labels)
+        loss, classification_scores = outputs[:2]
 
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 
 @add_start_docstrings(
@@ -303,36 +304,37 @@ class XLMRobertaForMultipleChoice(RobertaForMultipleChoice):
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaForTokenClassification(RobertaForTokenClassification):
-  r"""
-      **labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
-          Labels for computing the token classification loss.
-          Indices should be in ``[0, ..., config.num_labels - 1]``.
+    r"""
+        **labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
+            Labels for computing the token classification loss.
+            Indices should be in ``[0, ..., config.num_labels - 1]``.
 
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-          Classification loss.
-      **scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, config.num_labels)``
-          Classification scores (before SoftMax).
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Classification loss.
+        **scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, config.num_labels)``
+            Classification scores (before SoftMax).
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
 
-  Examples::
+    Examples::
 
-      tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
-      model = XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-large')
-      input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .", add_special_tokens=True)).unsqueeze(0)  # Batch size 1
-      labels = torch.tensor([1] * input_ids.size(1)).unsqueeze(0)  # Batch size 1
-      outputs = model(input_ids, labels=labels)
-      loss, scores = outputs[:2]
+        tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large')
+        model = XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-large')
+        input_ids = torch.tensor(tokenizer.encode("Schloß Nymphenburg ist sehr schön .", add_special_tokens=True)).unsqueeze(0)  # Batch size 1
+        labels = torch.tensor([1] * input_ids.size(1)).unsqueeze(0)  # Batch size 1
+        outputs = model(input_ids, labels=labels)
+        loss, scores = outputs[:2]
 
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+
 
 @add_start_docstrings(
     """XLM-RoBERTa Model with a span classification head on top for extractive question-answering tasks like SQuAD (a
@@ -341,53 +343,54 @@ class XLMRobertaForTokenClassification(RobertaForTokenClassification):
     XLM_ROBERTA_INPUTS_DOCSTRING,
 )
 class XLMRobertaForQuestionAnswering(RobertaForQuestionAnswering):
-  r"""
-      **start_positions**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
-          Labels for position (index) of the start of the labelled span for computing the token classification loss.
-          Positions are clamped to the length of the sequence (`sequence_length`).
-          Position outside of the sequence are not taken into account for computing the loss.
-      **end_positions**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
-          Labels for position (index) of the end of the labelled span for computing the token classification loss.
-          Positions are clamped to the length of the sequence (`sequence_length`).
-          Position outside of the sequence are not taken into account for computing the loss.
-      **is_impossible**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
-          Labels whether a question has an answer or no answer (SQuAD 2.0)
-      **cls_index**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
-          Labels for position (index) of the classification token to use as input for computing plausibility of the answer.
-      **p_mask**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
-          Optional mask of tokens which can't be in answers (e.g. [CLS], [PAD], ...)
-  Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-      **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-          Total span extraction loss is the sum of a Cross-Entropy for the start and end positions.
-      **start_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length,)``
-          Span-start scores (before SoftMax).
-      **end_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length,)``
-          Span-end scores (before SoftMax).
-      **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-          list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-          of shape ``(batch_size, sequence_length, hidden_size)``:
-          Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-      **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-          list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-          Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
-  Examples::
-      tokenizer = XLMTokenizer.from_pretrained('xlm-mlm-en-2048')
-      model = XLMForQuestionAnswering.from_pretrained('xlm-mlm-en-2048')
-      input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute", add_special_tokens=True)).unsqueeze(0)  # Batch size 1
-      start_positions = torch.tensor([1])
-      end_positions = torch.tensor([3])
-      outputs = model(input_ids, start_positions=start_positions, end_positions=end_positions)
-      loss, start_scores, end_scores = outputs[:2]
-  """
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    r"""
+        **start_positions**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
+            Labels for position (index) of the start of the labelled span for computing the token classification loss.
+            Positions are clamped to the length of the sequence (`sequence_length`).
+            Position outside of the sequence are not taken into account for computing the loss.
+        **end_positions**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
+            Labels for position (index) of the end of the labelled span for computing the token classification loss.
+            Positions are clamped to the length of the sequence (`sequence_length`).
+            Position outside of the sequence are not taken into account for computing the loss.
+        **is_impossible**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
+            Labels whether a question has an answer or no answer (SQuAD 2.0)
+        **cls_index**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size,)``:
+            Labels for position (index) of the classification token to use as input for computing plausibility of the answer.
+        **p_mask**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
+            Optional mask of tokens which can't be in answers (e.g. [CLS], [PAD], ...)
+    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+        **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
+            Total span extraction loss is the sum of a Cross-Entropy for the start and end positions.
+        **start_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length,)``
+            Span-start scores (before SoftMax).
+        **end_scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length,)``
+            Span-end scores (before SoftMax).
+        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+            of shape ``(batch_size, sequence_length, hidden_size)``:
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+    Examples::
+        tokenizer = XLMTokenizer.from_pretrained('xlm-mlm-en-2048')
+        model = XLMForQuestionAnswering.from_pretrained('xlm-mlm-en-2048')
+        input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute", add_special_tokens=True)).unsqueeze(0)  # Batch size 1
+        start_positions = torch.tensor([1])
+        end_positions = torch.tensor([3])
+        outputs = model(input_ids, start_positions=start_positions, end_positions=end_positions)
+        loss, start_scores, end_scores = outputs[:2]
+    """
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 
 class XLMRobertaForRetrieval(BertForRetrieval):
-  """XLM-RoBERTa Model for retrieval with a dual encoder."""
-  config_class = XLMRobertaConfig
-  pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
-  base_model_prefix = "roberta"
+    """XLM-RoBERTa Model for retrieval with a dual encoder."""
 
-  def __init__(self, config):
-    super().__init__(config, "roberta", RobertaModel)
+    config_class = XLMRobertaConfig
+    pretrained_model_archive_map = XLM_ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+    base_model_prefix = "roberta"
+
+    def __init__(self, config):
+        super().__init__(config, "roberta", RobertaModel)

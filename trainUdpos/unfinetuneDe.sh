@@ -61,8 +61,8 @@ python $REPO/utils_preprocess.py \
 
 # # cp $DATA_DIR_/$TASK/labels.txt $DATA_DIR
 mkdir -p $OUTPUT_DIR/align.awesome.unfinetuned
-for lang in de zh hi fr; do
-  mkdir -p $OUTPUT_DIR/align.awesome.unfinetuned/$lang
+for lang in de; do
+  mkdir $OUTPUT_DIR/align.awesome.unfinetuned/$lang
   python $REPO/third_party/run_tag.py \
     --data_dir $DATA_DIR \
     --model_type $MODEL_TYPE \
@@ -91,32 +91,6 @@ for lang in de zh hi fr; do
     --aligned_suffix $lang.awesome.unfinetuned \
 
 done
-
-python $REPO/third_party/run_tag.py \
-  --data_dir $DATA_DIR \
-  --model_type $MODEL_TYPE \
-  --labels $DATA_DIR/labels.txt \
-  --model_name_or_path $MODEL \
-  --output_dir $OUTPUT_DIR \
-  --max_seq_length  $MAX_LENGTH \
-  --num_train_epochs $NUM_EPOCHS \
-  --gradient_accumulation_steps $GRAD_ACC \
-  --per_gpu_train_batch_size $BATCH_SIZE \
-  --save_steps 500 \
-  --logging_steps 500 \
-  --seed 1 \
-  --learning_rate $LR \
-  --do_train \
-  --do_eval \
-  --do_predict \
-  --do_predict_dev \
-  --evaluate_during_training \
-  --predict_langs $LANGS \
-  --log_file $OUTPUT_DIR/train.log \
-  --eval_all_checkpoints \
-  --overwrite_output_dir \
-  --save_only_best_checkpoint $LC \
-  --overwrite_cache \
 
 
 

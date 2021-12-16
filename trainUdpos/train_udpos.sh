@@ -60,9 +60,9 @@ python $REPO/utils_preprocess.py \
 # fi
 
 # # cp $DATA_DIR_/$TASK/labels.txt $DATA_DIR
-mkdir -p $OUTPUT_DIR/align.awesome.unfinetuned
+mkdir $OUTPUT_DIR/align.awesome.unfinetuned
 for lang in de zh hi fr; do
-  mkdir -p $OUTPUT_DIR/align.awesome.unfinetuned/$lang
+  mkdir $OUTPUT_DIR/align.awesome.unfinetuned/$lang
   python $REPO/third_party/run_tag.py \
     --data_dir $DATA_DIR \
     --model_type $MODEL_TYPE \
