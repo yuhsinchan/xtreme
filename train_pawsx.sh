@@ -76,7 +76,7 @@ for lang in de zh hi fr; do
     --log_file 'train.log' \
     --predict_languages $LANGS \
     --save_only_best_checkpoint $LC \
-    --eval_test_set 
+    --eval_test_set \
     --aligned_suffix $DATA_DIR/${TASK}/$lang.awesome.unfinetuned
 
 done
@@ -110,7 +110,7 @@ for lang in de zh hi fr; do
     --log_file 'train.log' \
     --predict_languages $LANGS \
     --save_only_best_checkpoint $LC \
-    --eval_test_set 
+    --eval_test_set \
     --aligned_suffix $DATA_DIR/${TASK}/$lang.awesome.finetuned
 
 done

@@ -55,9 +55,11 @@ class PawsxProcessor(DataProcessor):
                     and isinstance(text_b, str)
                     and isinstance(label, str)
                 )
-                text_a, text_b = reorder_2_sent(
-                    alignment_file=alignment_file, text_a=text_a, text_b=text_b
-                )
+
+                if alignment_file != None:
+                    text_a, text_b = reorder_2_sent(
+                        alignment_file=alignment_file, text_a=text_a, text_b=text_b
+                    )
                 examples.append(
                     InputExample(
                         guid=guid,
@@ -107,12 +109,9 @@ class PawsxProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir, language="en", aligned_suffix=None):
         """See base class."""
-        if aligned_suffix == None:
-            return self.get_examples(data_dir, language, split="train")
-        else:
-            return self.get_examples(
-                data_dir, language, split="train", alignment_file=aligned_suffix
-            )
+        return self.get_examples(
+            data_dir, language, split="train", alignment_file=aligned_suffix
+        )
 
     def get_translate_train_examples(self, data_dir, language="en"):
         """See base class."""
